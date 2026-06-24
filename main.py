@@ -14,7 +14,7 @@ EMAIL_PATTERN = r"[A-Za-z0-9]+@[\w]+\.[\w]+"
 PDF_PATH = os.getenv("pdf_path", None)
 GCS_BUCKET_NAME = os.getenv("gcs_bucket_name", None)
 S3_BUCKET_NAME = os.getenv("s3_bucket_name", None)
-S3_OBJECT_KEY = ""
+S3_OBJECT_KEY = os.getenv("s3_object_key", "example.pdf")
 
 service_account_credentials = {
     "type": os.getenv("service_account_type", None),
