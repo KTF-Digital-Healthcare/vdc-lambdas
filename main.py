@@ -1,4 +1,8 @@
-# importing required classes
+"""
+This function will scan through one given PDF document, use Google's Natural Language API to find and censor
+identifiable information, before uploading to a given GCS bucket as a txt file. The PDF can be given as a raw file path
+or as an S3 file providing the S3 bucket and object key are given.
+"""
 import io
 import os
 
@@ -43,9 +47,10 @@ def lambda_handler(event, context):
     language_client = language_v1.LanguageServiceClient(
         credentials=credentials,
     )
-    storage_client = storage.Client(credentials=credentials)
-    s3_client = boto3.client("s3")
+    storage_client = storage.Client(credentials=credentials)  # GCS Storage client
+    s3_client = boto3.client("s3")  # AWS Storage client
 
+    # Find GCS bucket
     bucket = storage_client.bucket(GCS_BUCKET_NAME)
 
     # creating a pdf reader object
@@ -63,6 +68,7 @@ def lambda_handler(event, context):
 
     plain_text = ""
 
+    # Iterate through pages in the PDF document
     for page in reader.pages:
 
         # extracting text from page
@@ -70,6 +76,7 @@ def lambda_handler(event, context):
 
         document = language_v1.Document(type_=language_v1.Document.Type.PLAIN_TEXT)
         document.content = text
+        # Send an API request to Google Natural Language API to censor information
         request = language_v1.AnalyzeEntitiesRequest(
             document=document,
         )
