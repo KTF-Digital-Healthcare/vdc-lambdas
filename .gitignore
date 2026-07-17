@@ -218,3 +218,5 @@ __marimo__/
 .streamlit/secrets.toml
 
 *.env
+
+image_processing/test_images
